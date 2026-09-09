@@ -18,7 +18,7 @@ export default function HeroSection() {
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <span className="text-sm font-bold text-slate-700 group-hover:text-[#1e3a8a] transition-colors">
+          <span className="text-sm font-black text-black group-hover:text-[#1e3a8a] transition-colors">
             WorkAtlas
           </span>
         </Link>
@@ -26,20 +26,20 @@ export default function HeroSection() {
 
       {/* Badge */}
       <div className="flex justify-center mb-5">
-        <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-50 border border-blue-100 text-blue-700 animate-fade-in-up">
+        <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black bg-blue-50 border border-blue-200 text-blue-900 animate-fade-in-up">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Free • No sign-up required • Instant results
         </span>
       </div>
 
       {/* Main heading */}
-      <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 mb-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+      <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-black mb-4 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
         Free ATS <span className="text-[#1e3a8a]">Resume Score</span>
         <br />Checker
       </h1>
 
       {/* Subtitle */}
-      <p className="max-w-xl mx-auto text-base sm:text-lg text-slate-600 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+      <p className="max-w-xl mx-auto text-base sm:text-lg text-gray-900 font-bold leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
         Find out if your resume passes Applicant Tracking System filters.
         Get an instant score out of 100 with specific, actionable feedback.
       </p>

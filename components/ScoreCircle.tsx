@@ -102,10 +102,10 @@ export default function ScoreCircle({ score }: ScoreCircleProps) {
 
         {/* Center content */}
         <div className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ${animated ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-          <span className="text-5xl sm:text-6xl font-black tabular-nums text-slate-800 tracking-tight">
+          <span className="text-5xl sm:text-6xl font-black tabular-nums text-black tracking-tight">
             {displayed}
           </span>
-          <span className="text-xs text-slate-400 font-bold tracking-wider uppercase mt-1">
+          <span className="text-xs text-gray-900 font-black tracking-wider uppercase mt-1">
             out of 100
           </span>
         </div>
@@ -119,7 +119,7 @@ export default function ScoreCircle({ score }: ScoreCircleProps) {
           <span className="w-2 h-2 rounded-full" style={{ background: colors.stroke }} />
           {label}
         </span>
-        <p className="text-sm text-slate-500 font-medium text-center max-w-xs">{subtext}</p>
+        <p className="text-sm text-gray-900 font-bold text-center max-w-xs">{subtext}</p>
       </div>
     </div>
   );

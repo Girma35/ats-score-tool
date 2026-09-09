@@ -62,10 +62,10 @@ export default function ResultsSection({
     <section className="max-w-4xl mx-auto px-4 pb-24 animate-fade-in-up">
       {/* ─── Header ─── */}
       <div className="text-center mb-10">
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-black text-black mb-2 tracking-tight">
           Your ATS Analysis Results
         </h2>
-        <p className="text-sm font-medium text-slate-500">
+        <p className="text-sm font-bold text-gray-900">
           {jobDescription
             ? 'Scored against your provided job description'
             : 'Scored against general ATS best practices'}
@@ -80,7 +80,7 @@ export default function ResultsSection({
         <div className="flex flex-wrap justify-center gap-3 mt-10">
           <button
             onClick={handleShare}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 text-sm font-bold transition-all duration-200"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-900 text-sm font-black transition-all duration-200"
           >
             {copied ? (
               <>
@@ -101,7 +101,7 @@ export default function ResultsSection({
 
           <button
             onClick={onReset}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-sm font-bold transition-all duration-200 shadow-sm"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-black text-sm font-black transition-all duration-200 shadow-sm"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -113,7 +113,7 @@ export default function ResultsSection({
 
       {/* ─── Scoring breakdown bar ─── */}
       <div className="clean-card p-6 mb-8">
-        <h3 className="text-sm font-bold text-slate-800 mb-5 flex items-center gap-2 uppercase tracking-wide">
+        <h3 className="text-sm font-black text-black mb-5 flex items-center gap-2 uppercase tracking-wide">
           <svg className="w-4 h-4 text-[#1e3a8a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
@@ -122,7 +122,7 @@ export default function ResultsSection({
         <div className="space-y-4">
           {categories.map((cat) => (
             <div key={cat.name} className="flex items-center gap-4">
-              <span className="text-sm font-semibold text-slate-700 w-44 shrink-0">{cat.name}</span>
+              <span className="text-sm font-black text-black w-44 shrink-0">{cat.name}</span>
               <div className="flex-1 h-2.5 bg-slate-100 border border-slate-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#1e3a8a] rounded-full"
@@ -132,7 +132,7 @@ export default function ResultsSection({
                   }}
                 />
               </div>
-              <span className="text-sm font-bold text-slate-500 w-10 text-right">{cat.weight}%</span>
+              <span className="text-sm font-black text-black w-10 text-right">{cat.weight}%</span>
             </div>
           ))}
         </div>
@@ -140,12 +140,12 @@ export default function ResultsSection({
 
       {/* ─── Feedback grid ─── */}
       <div className="mb-4">
-        <h3 className="text-xl font-extrabold text-slate-900 mb-6 flex items-center gap-2">
+        <h3 className="text-xl font-black text-black mb-6 flex items-center gap-2">
           <svg className="w-6 h-6 text-[#1e3a8a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
           </svg>
           Detailed Feedback
-          <span className="ml-auto text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+          <span className="ml-auto text-xs font-black text-black bg-slate-100 px-3 py-1 rounded-full border border-slate-300">
             {strengths.length} strength{strengths.length !== 1 ? 's' : ''} · {issues.length} issue{issues.length !== 1 ? 's' : ''} to fix
           </span>
         </h3>
@@ -153,7 +153,7 @@ export default function ResultsSection({
         {/* Strengths */}
         {strengths.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h4 className="text-xs font-black text-emerald-700 uppercase tracking-wider mb-4 flex items-center gap-2">
               <span className="w-1.5 h-4 rounded-full bg-emerald-500 inline-block" />
               Strengths
             </h4>
@@ -168,7 +168,7 @@ export default function ResultsSection({
         {/* Issues */}
         {issues.length > 0 && (
           <div>
-            <h4 className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <h4 className="text-xs font-black text-amber-700 uppercase tracking-wider mb-4 flex items-center gap-2">
               <span className="w-1.5 h-4 rounded-full bg-amber-500 inline-block" />
               Issues to Fix
             </h4>
@@ -183,14 +183,14 @@ export default function ResultsSection({
 
       {/* ─── CTA banner ─── */}
       <div className="mt-10 p-8 rounded-2xl bg-blue-50 border border-blue-100 text-center shadow-sm">
-        <p className="text-sm font-bold text-blue-900 mb-5">
+        <p className="text-sm font-black text-blue-900 mb-5">
           Ready to find jobs that match your profile? Browse thousands of verified listings on WorkAtlas.
         </p>
         <a
           href="https://workatlas.tech"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1e3a8a] hover:bg-blue-900 text-white text-sm font-bold rounded-xl transition-all duration-200 shadow-md hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1e3a8a] hover:bg-blue-900 text-white text-sm font-black rounded-xl transition-all duration-200 shadow-md hover:-translate-y-0.5"
         >
           Browse Jobs on WorkAtlas
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

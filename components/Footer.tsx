@@ -22,17 +22,17 @@ export default function Footer() {
               </svg>
             </div>
             <div>
-              <span className="text-sm font-extrabold text-slate-800 group-hover:text-[#1e3a8a] transition-colors">
+              <span className="text-sm font-black text-black group-hover:text-[#1e3a8a] transition-colors">
                 WorkAtlas
               </span>
-              <span className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">
+              <span className="block text-[10px] font-black text-gray-900 uppercase tracking-wider mt-0.5">
                 workatlas.tech
               </span>
             </div>
           </Link>
 
           {/* Links */}
-          <nav className="flex items-center gap-6 text-sm font-semibold text-slate-500">
+          <nav className="flex items-center gap-6 text-sm font-black text-black">
             {[
               { label: 'Job Board', href: 'https://workatlas.tech' },
               { label: 'Privacy', href: 'https://workatlas.tech/privacy' },
@@ -55,7 +55,7 @@ export default function Footer() {
         <div className="h-px bg-slate-200 mb-6" />
 
         {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-500">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-black text-black">
           <p>
             © {currentYear} WorkAtlas · ATS Resume Score Checker
           </p>
@@ -66,7 +66,7 @@ export default function Footer() {
         </div>
 
         {/* Disclaimer */}
-        <p className="text-center text-[11px] font-medium text-slate-400 mt-6 max-w-xl mx-auto leading-relaxed">
+        <p className="text-center text-[11px] font-bold text-gray-900 mt-6 max-w-xl mx-auto leading-relaxed">
           This tool provides automated ATS compatibility analysis. Results are estimates and may vary across different ATS platforms. Always tailor your resume for each specific role.
         </p>
       </div>
