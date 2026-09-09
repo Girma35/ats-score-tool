@@ -60,12 +60,26 @@ Rules:
 - Be specific and actionable in descriptions
 - Output raw JSON only — no markdown fences, no preamble`;
 
-// ─── Strip markdown fences from AI output ────────────────────────────────────
+// ─── Strip markdown fences and thinking blocks from AI output ────────────────
 function cleanJSON(raw: string): string {
-  return raw
-    .replace(/```json\s*/gi, '')
-    .replace(/```\s*/g, '')
-    .trim();
+  // Remove <think>...</think> blocks which some reasoning models use
+  let cleaned = raw.replace(/<think>[\s\S]*?<\/think>/gi, '');
+  
+  // Extract the JSON object from the remaining text
+  const start = cleaned.indexOf('{');
+  const end = cleaned.lastIndexOf('}');
+  
+  if (start !== -1 && end !== -1 && end > start) {
+    cleaned = cleaned.substring(start, end + 1);
+  } else {
+    // Fallback if no clear brackets, just strip markdown
+    cleaned = cleaned
+      .replace(/```json\s*/gi, '')
+      .replace(/```\s*/g, '')
+      .trim();
+  }
+  
+  return cleaned;
 }
 
 // ─── Provider: Groq (Free — Llama 3.3 70B) ───────────────────────────────────
