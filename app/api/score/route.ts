@@ -36,12 +36,17 @@ Analyze the resume across these 5 weighted categories:
    - Very long (3+ pages) or very short (< half page) resume
    - Outdated format indicators
 
-Return ONLY valid JSON with this exact structure (no markdown, no explanation):
+Return ONLY valid JSON with this exact structure (no markdown, no explanation, no code fences):
 {
   "score": <number 0-100>,
   "feedback": [
     {
-      "type": "strength" | "issue",
+      "type": "strength",
+      "title": "<short title, max 6 words>",
+      "description": "<one sentence explanation, max 20 words>"
+    },
+    {
+      "type": "issue",
       "title": "<short title, max 6 words>",
       "description": "<one sentence explanation, max 20 words>"
     }
@@ -53,46 +58,26 @@ Rules:
 - Mix strengths and issues honestly
 - Score 80–100 = Excellent, 60–79 = Good, 40–59 = Fair, <40 = Poor
 - Be specific and actionable in descriptions
-- Never return markdown, only raw JSON`;
+- Output raw JSON only — no markdown fences, no preamble`;
 
-// ─── Helper: call OpenAI ─────────────────────────────────────────────────────
-async function callOpenAI(prompt: string): Promise<ScoreResult> {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0.3,
-      max_tokens: 800,
-      response_format: { type: 'json_object' },
-    }),
-  });
-
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`OpenAI error ${response.status}: ${err}`);
-  }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content;
-  if (!content) throw new Error('Empty response from OpenAI');
-  return JSON.parse(content) as ScoreResult;
+// ─── Strip markdown fences from AI output ────────────────────────────────────
+function cleanJSON(raw: string): string {
+  return raw
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/g, '')
+    .trim();
 }
 
-// ─── Helper: call Groq ───────────────────────────────────────────────────────
+// ─── Provider: Groq (Free — Llama 3.3 70B) ───────────────────────────────────
 async function callGroq(prompt: string): Promise<ScoreResult> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error('GROQ_API_KEY is not set. Get a free key at console.groq.com');
+
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
@@ -101,22 +86,109 @@ async function callGroq(prompt: string): Promise<ScoreResult> {
         { role: 'user', content: prompt },
       ],
       temperature: 0.3,
-      max_tokens: 800,
+      max_tokens: 900,
     }),
   });
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`Groq error ${response.status}: ${err}`);
+    throw new Error(`Groq API error ${response.status}: ${err}`);
   }
 
   const data = await response.json();
-  const content = data.choices?.[0]?.message?.content;
+  const content = data.choices?.[0]?.message?.content as string | undefined;
   if (!content) throw new Error('Empty response from Groq');
 
-  // Groq may wrap JSON in markdown — strip it
-  const cleaned = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-  return JSON.parse(cleaned) as ScoreResult;
+  return JSON.parse(cleanJSON(content)) as ScoreResult;
+}
+
+// ─── Provider: Google Gemini (Free — gemini-2.0-flash) ───────────────────────
+async function callGemini(prompt: string): Promise<ScoreResult> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error('GEMINI_API_KEY is not set. Get a free key at aistudio.google.com');
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system_instruction: {
+        parts: [{ text: SYSTEM_PROMPT }],
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 900,
+        responseMimeType: 'application/json',
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Gemini API error ${response.status}: ${err}`);
+  }
+
+  const data = await response.json();
+  const content =
+    data?.candidates?.[0]?.content?.parts?.[0]?.text as string | undefined;
+  if (!content) throw new Error('Empty response from Gemini');
+
+  return JSON.parse(cleanJSON(content)) as ScoreResult;
+}
+
+// ─── Provider: Mistral (Free via La Plateforme — mistral-small-latest) ────────
+async function callMistral(prompt: string): Promise<ScoreResult> {
+  const apiKey = process.env.MISTRAL_API_KEY;
+  if (!apiKey) throw new Error('MISTRAL_API_KEY is not set. Get a free key at console.mistral.ai');
+
+  const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'mistral-small-latest',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: prompt },
+      ],
+      temperature: 0.3,
+      max_tokens: 900,
+      response_format: { type: 'json_object' },
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Mistral API error ${response.status}: ${err}`);
+  }
+
+  const data = await response.json();
+  const content = data.choices?.[0]?.message?.content as string | undefined;
+  if (!content) throw new Error('Empty response from Mistral');
+
+  return JSON.parse(cleanJSON(content)) as ScoreResult;
+}
+
+// ─── Validate AI response shape ───────────────────────────────────────────────
+function validateResult(result: unknown): result is ScoreResult {
+  if (typeof result !== 'object' || result === null) return false;
+  const r = result as Record<string, unknown>;
+  return (
+    typeof r.score === 'number' &&
+    r.score >= 0 &&
+    r.score <= 100 &&
+    Array.isArray(r.feedback) &&
+    r.feedback.length >= 1
+  );
 }
 
 // ─── Main Route Handler ───────────────────────────────────────────────────────
@@ -135,37 +207,34 @@ export async function POST(req: NextRequest) {
     // Build user prompt
     const userPrompt = jobDescription?.trim()
       ? `RESUME:\n${resumeText}\n\nJOB DESCRIPTION:\n${jobDescription}`
-      : `RESUME:\n${resumeText}\n\n(No job description provided — analyze based on general ATS best practices)`;
+      : `RESUME:\n${resumeText}\n\n(No job description provided — analyze based on general ATS best practices and common role keywords.)`;
 
-    const provider = process.env.AI_PROVIDER || 'openai';
+    // Pick provider — default to groq
+    const provider = (process.env.AI_PROVIDER || 'groq').toLowerCase();
 
     let result: ScoreResult;
-    if (provider === 'groq') {
-      result = await callGroq(userPrompt);
-    } else {
-      result = await callOpenAI(userPrompt);
+    switch (provider) {
+      case 'gemini':
+        result = await callGemini(userPrompt);
+        break;
+      case 'mistral':
+        result = await callMistral(userPrompt);
+        break;
+      case 'groq':
+      default:
+        result = await callGroq(userPrompt);
+        break;
     }
 
-    // Validate response shape
-    if (
-      typeof result.score !== 'number' ||
-      result.score < 0 ||
-      result.score > 100 ||
-      !Array.isArray(result.feedback)
-    ) {
-      throw new Error('Invalid response shape from AI');
+    if (!validateResult(result)) {
+      throw new Error('AI returned an invalid response shape. Please try again.');
     }
 
     return NextResponse.json(result);
   } catch (error) {
     console.error('[/api/score] Error:', error);
-
     const message =
-      error instanceof Error ? error.message : 'An unexpected error occurred';
-
-    return NextResponse.json(
-      { error: message },
-      { status: 500 }
-    );
+      error instanceof Error ? error.message : 'An unexpected error occurred.';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

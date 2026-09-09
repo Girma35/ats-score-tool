@@ -2,6 +2,8 @@
 
 A free, AI-powered ATS resume compatibility checker built for [workatlas.tech](https://workatlas.tech).
 
+> **100% free AI** — no OpenAI required. Uses Groq, Gemini, or Mistral (all free tiers).
+
 ## Features
 
 - 📄 Upload PDF/DOCX resume or paste resume text
@@ -13,9 +15,9 @@ A free, AI-powered ATS resume compatibility checker built for [workatlas.tech](h
 
 ## Tech Stack
 
-- **Next.js 14+** (App Router) + TypeScript
+- **Next.js 16** (App Router) + TypeScript
 - **Tailwind CSS** (v4)
-- **AI**: OpenAI GPT-4o-mini or Groq Llama-3
+- **AI (free)**: Groq Llama-3.3-70B · Google Gemini 2.0 Flash · Mistral Small
 - **PDF parsing**: pdfjs-dist
 - **DOCX parsing**: mammoth
 
@@ -33,16 +35,26 @@ npm install
 cp .env.local.example .env.local
 ```
 
-Edit `.env.local` and add your API key:
+Choose **one** free provider and add its key to `.env.local`:
+
+| Provider | Free Tier | Sign Up |
+|---|---|---|
+| **Groq** ⭐ (default) | Very generous, no card | [console.groq.com](https://console.groq.com) |
+| **Google Gemini** | 1M tokens/day free | [aistudio.google.com](https://aistudio.google.com) |
+| **Mistral** | Free trial credits | [console.mistral.ai](https://console.mistral.ai) |
 
 ```env
-# Choose OpenAI (recommended)
-OPENAI_API_KEY=sk-...
-AI_PROVIDER=openai
+# Groq (recommended default)
+AI_PROVIDER=groq
+GROQ_API_KEY=gsk_...
 
-# Or Groq (free tier available)
-# GROQ_API_KEY=gsk_...
-# AI_PROVIDER=groq
+# OR Gemini
+# AI_PROVIDER=gemini
+# GEMINI_API_KEY=AIza...
+
+# OR Mistral
+# AI_PROVIDER=mistral
+# MISTRAL_API_KEY=...
 ```
 
 ### 3. Run the development server
